@@ -5,11 +5,13 @@
 
 [![Tests](https://img.shields.io/badge/pytest-55%20passed%20(100%25)-brightgreen.svg)](#-step-by-step-verification-tests)
 [![Demo Video](https://img.shields.io/badge/Demo%20Video-YouTube-red?logo=youtube)](https://youtu.be/THem7fTU__U)
+[![Article](https://img.shields.io/badge/Article-Dev.to-black?logo=devdotto)](https://dev.to/hemanth_saichitra_fb1bc0/why-i-gave-my-code-review-agent-a-graph-598o)
 [![FalkorDB](https://img.shields.io/badge/graph_database-FalkorDB-red.svg)](https://falkordb.com/)
 [![MCP](https://img.shields.io/badge/protocol-Model_Context_Protocol_(MCP)-blue.svg)](https://modelcontextprotocol.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> 📺 **[Watch the 3-Minute Live Demo Video on YouTube](https://youtu.be/THem7fTU__U)**
+> 📺 **[Watch the 3-Minute Live Demo Video on YouTube](https://youtu.be/THem7fTU__U)**  
+> 📖 **[Read the Technical Blog Post on Dev.to](https://dev.to/hemanth_saichitra_fb1bc0/why-i-gave-my-code-review-agent-a-graph-598o)**
 
 ---
 
