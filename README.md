@@ -59,7 +59,7 @@ flowchart TD
 
     subgraph ALGO["3. GRAPH ALGORITHMS ENGINE"]
         BLAST["💥 Blast Radius<br/>(Transitive Downstream Ripple)"]
-        PATH["🧭 Shortest Path<br/>(Dijkstra / Cypher Traversal)"]
+        PATH["🧭 Shortest Path<br/>(CALLS*1..N ORDER BY length LIMIT 1)"]
         HUBS["🎯 Centrality & Hubs<br/>(Degree & Bottleneck Scoring)"]
         TESTS["🧪 Test Discovery<br/>(Caller-to-Test Coverage)"]
         REV["👥 Reviewer Scoring<br/>(Churn + Ownership Weighting)"]
