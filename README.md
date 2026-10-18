@@ -305,7 +305,7 @@ The following high-centrality functions are directly or transitively in the blas
 - 🔴 `blastradius/ingester/builder.py:RepoIngester.ingest`
 
 ### 👥 Suggested Reviewers
-- **BlastRadius Developer** (`dev@blastradius.local`) — touched `blastradius/graph/db.py` (score: `20.8`)
+- **Hemanth Sai** (@hemanth-sai29) — touched `blastradius/graph/db.py` (score: `20.8`)
 
 <details>
 <summary>🔍 <b>Multi-Hop Graph Explainability Chains</b></summary>
