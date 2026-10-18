@@ -1,21 +1,63 @@
-# Byte-compiled / optimized / DLL files
+# ==============================================================
+# BlastRadius — .gitignore
+# ==============================================================
+
+# ---------- Python ----------
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyo
+*.pyd
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
 
-# Environments
+# ---------- Environments ----------
 .env
-.venv
-env/
+.env.*
+.venv/
 venv/
+env/
 ENV/
 
-# IDE & OS
+# ---------- Secrets / Keys (never commit) ----------
+*.pem
+*.key
+secrets.toml
+config.local.*
+
+# ---------- IDE & OS ----------
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# FalkorDB data mounts if any
+# ---------- FalkorDB / Redis data ----------
 *.rdb
 *.aof
+dump.rdb
+
+# ---------- Third-party repos cloned for demo ----------
+repos/
+
+# ---------- Generated outputs ----------
+pr_comment.md
+*.log
+
+# ---------- Temporary scripts ----------
+_bench.py
+_fix_readme.py
+
+# ---------- Pytest cache ----------
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ---------- MyPy ----------
+.mypy_cache/
+
+# ---------- Node (web assets if any) ----------
+node_modules/

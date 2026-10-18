@@ -15,17 +15,21 @@ class NodeLabel:
     CLASS = "Class"
     COMMIT = "Commit"
     AUTHOR = "Author"
+    ISSUE = "Issue"
 
 
 class RelationType:
     """Edge types representing code and git relationships."""
-    CONTAINS = "CONTAINS"     # File -> Function/Class, or Class -> Method
-    IMPORTS = "IMPORTS"       # File -> File
-    CALLS = "CALLS"           # Function -> Function
-    INHERITS = "INHERITS"     # Class -> Class
-    TESTS = "TESTS"           # TestFunction -> TargetFunction
-    AUTHORED = "AUTHORED"     # Author -> Commit
-    MODIFIED = "MODIFIED"     # Commit -> File
+    CONTAINS = "CONTAINS"        # File -> Function/Class, or Class -> Method
+    IMPORTS = "IMPORTS"          # File -> File
+    CALLS = "CALLS"              # Function -> Function
+    INHERITS = "INHERITS"        # Class -> Class
+    TESTS = "TESTS"              # TestFunction -> TargetFunction
+    AUTHORED = "AUTHORED"        # Author -> Commit
+    MODIFIED = "MODIFIED"        # Commit -> File
+    MODIFIED_BY = "MODIFIED_BY"  # Commit -> File
+    FIXES = "FIXES"              # Commit -> Issue
+    OWNS = "OWNS"                # Author -> File
 
 
 # Cypher commands to build indices for high-performance traversals
@@ -35,4 +39,5 @@ INDEX_QUERIES = [
     f"CREATE INDEX FOR (c:{NodeLabel.CLASS}) ON (c.full_name)",
     f"CREATE INDEX FOR (a:{NodeLabel.AUTHOR}) ON (a.email)",
     f"CREATE INDEX FOR (cm:{NodeLabel.COMMIT}) ON (cm.hash)",
+    f"CREATE INDEX FOR (i:{NodeLabel.ISSUE}) ON (i.id)",
 ]

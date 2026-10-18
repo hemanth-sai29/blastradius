@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💥 BlastRadius — Interactive Code Graph & MCP Agent</title>
+  <meta name="description" content="Autonomous multi-hop code impact analysis, live graph path visualization, and automated PR risk commentary powered by FalkorDB and MCP.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <!-- Cytoscape.js CDN for interactive high-performance graph visualization -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+</head>
+<body>
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="brand">
+      <span class="brand-icon">💥</span>
+      <div class="brand-text">
+        <h1 class="brand-title">BlastRadius</h1>
+        <span class="brand-subtitle">Code Graph & MCP Reasoning Agent</span>
+      </div>
+      <span class="status-badge" id="statusBadge">
+        <span class="status-dot"></span> FalkorDB & MCP Online
+      </span>
+    </div>
+
+    <div class="header-actions">
+      <!-- User Memory Selector -->
+      <div class="user-pill" title="Active User ID (separate FalkorDB graph per user)">
+        <span class="user-pill-icon">👤</span>
+        <input type="text" id="inputUserId" value="alice" placeholder="User ID" class="input-user-id" title="Type to switch user memory graph" />
+      </div>
+
+      <!-- Show My Memory Graph Toggle Button -->
+      <button class="btn btn-memory" id="btnToggleMemoryGraph" title="Toggle between Repository Code Graph and Your Personal Memory Graph">
+        <span id="memoryGraphBtnIcon">🧠</span>
+        <span id="memoryGraphBtnText">Show My Memory Graph</span>
+      </button>
+
+      <!-- Try an Example Dropdown Button -->
+      <button class="btn btn-secondary" id="btnExamplesModal" title="Explore 5 sample questions">
+        <span>💡</span> Try an Example
+      </button>
+
+      <!-- Quick Action: Review PR -->
+      <button class="btn btn-action" id="btnQuickReview" title="Run PR Action Review (Dry Run)">
+        <span>⚡</span> Review PR (verify_token)
+      </button>
+
+      <!-- Theme Switcher -->
+      <button class="btn btn-icon" id="btnThemeToggle" title="Toggle Dark/Light Mode">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Grid Workspace -->
+  <main class="main-container">
+    <!-- Left Column: Interactive Chat Box -->
+    <section class="panel chat-panel" aria-label="Agent Chat Box">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>💬</span> Agent Reasoning Chat
+        </div>
+        <button class="btn-sm btn-ghost" id="btnClearChat" title="Clear chat history">Clear</button>
+      </div>
+
+      <!-- Quick Prompt Chips -->
+      <div class="quick-chips" id="quickChips">
+        <button class="chip" data-q="What could break if I modify function 'connect' in blastradius/graph/db.py?">💥 Impact: connect</button>
+        <button class="chip" data-q="Where did 'load_history' come from, who wrote it, and what issues did it resolve?">🧭 Origin: load_history</button>
+        <button class="chip" data-q="What breaks if I change 'verify_token' and who should review it?">👥 Reviewers: verify_token</button>
+      </div>
+
+      <!-- Scrollable Message Stream -->
+      <div class="chat-messages" id="chatMessages">
+        <!-- Welcome Message -->
+        <div class="msg-bubble agent-bubble">
+          <div class="bubble-avatar">💥</div>
+          <div class="bubble-content">
+            <div class="bubble-header">
+              <span class="bubble-author">BlastRadius Agent</span>
+              <span class="bubble-time">Just now</span>
+            </div>
+            <div class="bubble-text">
+              Welcome! I am your autonomous code graph reasoning agent powered by <b>FalkorDB</b> and the official <b>Model Context Protocol (MCP)</b>.
+              <br/><br/>
+              Ask me what breaks if code changes, trace provenance back to git commits, or generate ready-to-post PR reviews with <b>exact graph path highlighting</b> in the visualizer!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input Area -->
+      <form class="chat-input-bar" id="chatForm">
+        <textarea
+          id="chatInput"
+          placeholder="Ask a question about the repository (e.g. 'What breaks if I modify connect?')..."
+          rows="1"
+          required
+        ></textarea>
+        <button type="submit" class="btn btn-primary" id="btnSend">
+          <span>Send</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        </button>
+      </form>
+    </section>
+
+    <!-- Center Column: Interactive Graph View -->
+    <section class="panel graph-panel" aria-label="Interactive Graph View">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🧭</span> Connected Code Graph
+          <span class="badge badge-path" id="pathStatusBadge">Path: Waiting for query</span>
+        </div>
+
+        <!-- Graph Controls -->
+        <div class="graph-toolbar">
+          <select id="selectLayout" class="select-sm" title="Change Layout">
+            <option value="cose" selected>Layout: Force-Directed (Cose)</option>
+            <option value="breadthfirst">Layout: Hierarchical</option>
+            <option value="concentric">Layout: Concentric</option>
+            <option value="circle">Layout: Circular</option>
+          </select>
+          <button class="btn-icon-sm" id="btnZoomIn" title="Zoom In">+</button>
+          <button class="btn-icon-sm" id="btnZoomOut" title="Zoom Out">−</button>
+          <button class="btn-icon-sm" id="btnFitGraph" title="Fit to Screen">⛶</button>
+          <button class="btn-icon-sm" id="btnResetHighlight" title="Reset Path Highlights">🔄</button>
+        </div>
+      </div>
+
+      <!-- Graph Container -->
+      <div id="cy" class="cy-canvas"></div>
+
+      <!-- Graph Footer & Legend -->
+      <div class="graph-legend" id="graphLegend">
+        <div class="legend-item legend-code"><span class="legend-dot dot-function"></span> Function</div>
+        <div class="legend-item legend-code"><span class="legend-dot dot-file"></span> File</div>
+        <div class="legend-item legend-code"><span class="legend-dot dot-author"></span> Author</div>
+        <div class="legend-item legend-code"><span class="legend-dot dot-commit"></span> Commit</div>
+        <div class="legend-item legend-code"><span class="legend-dot dot-issue"></span> Issue</div>
+        <div class="legend-item legend-code"><span class="legend-dot dot-highlight"></span> <b>Active Path Traversed</b></div>
+
+        <!-- Memory Mode Legend (shown when viewing memory graph) -->
+        <div class="legend-item legend-mem" style="display:none;"><span class="legend-dot dot-user"></span> User</div>
+        <div class="legend-item legend-mem" style="display:none;"><span class="legend-dot dot-question"></span> Question</div>
+        <div class="legend-item legend-mem" style="display:none;"><span class="legend-dot dot-codearea"></span> Code Area</div>
+        <div class="legend-item legend-mem" style="display:none;"><span class="legend-dot dot-finding"></span> Finding</div>
+        <div class="legend-item legend-mem" style="display:none;"><span class="legend-dot dot-useful"></span> <b>⭐ Marked Useful</b></div>
+      </div>
+    </section>
+
+    <!-- Right Column: Tool Calls, PR Actions & User Memory Side Panel -->
+    <aside class="panel side-panel" aria-label="Tool Calls and Actions Panel">
+      <div class="panel-header">
+        <div class="tabs-nav">
+          <button class="tab-btn active" id="tabToolsBtn">🛠️ Tools (<span id="toolsCount">0</span>)</button>
+          <button class="tab-btn" id="tabActionsBtn">⚡ PR Action</button>
+          <button class="tab-btn" id="tabMemoryBtn">🧠 Memory (<span id="memoryCount">0</span>)</button>
+        </div>
+      </div>
+
+      <!-- Tab Content 1: MCP Tool Calls -->
+      <div class="tab-content active" id="tabToolsContent">
+        <div class="side-scroll" id="toolsList">
+          <div class="empty-state">
+            <span class="empty-icon">🔍</span>
+            <p>No tools called yet.</p>
+            <small>Ask a question or try an example to inspect the MCP tools invoked by the agent.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: PR Action & Risk Preview -->
+      <div class="tab-content" id="tabActionsContent">
+        <div class="side-scroll" id="actionsList">
+          <div class="empty-state">
+            <span class="empty-icon">📋</span>
+            <p>No active PR review.</p>
+            <small>Click "Review PR (verify_token)" above to trigger the autonomous risk and reviewer action pipeline.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: Per-User Memory Dashboard -->
+      <div class="tab-content" id="tabMemoryContent">
+        <div class="side-scroll" id="memoryDashboard">
+          <div class="memory-card">
+            <div class="memory-card-header">
+              <span class="memory-card-title">👤 Active User Memory</span>
+              <span class="badge badge-user" id="memUserBadge">alice</span>
+            </div>
+            <p class="memory-card-desc">
+              Dedicated FalkorDB memory graph: <code id="memGraphName">alice</code>. Automatically tracks your past questions, investigated code areas, and bookmarked findings.
+            </p>
+            <div class="memory-stats-grid">
+              <div class="stat-box">
+                <span class="stat-num" id="statQuestions">0</span>
+                <span class="stat-lbl">Questions</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="statAreas">0</span>
+                <span class="stat-lbl">Code Areas</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="statUseful">0</span>
+                <span class="stat-lbl">⭐ Useful</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="memory-section">
+            <div class="memory-section-title">📁 Tracked Code Areas</div>
+            <div class="tracked-areas-list" id="trackedAreasList">
+              <small class="text-muted">No code areas tracked yet. Ask a question to start building your graph memory.</small>
+            </div>
+          </div>
+
+          <div class="memory-actions-row">
+            <button class="btn btn-sm btn-outline-primary" id="btnMemViewGraph">
+              <span>🧠</span> View Memory Graph
+            </button>
+            <button class="btn btn-sm btn-outline-danger" id="btnMemClear">
+              <span>🗑️</span> Clear Memory
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Interactive "Try an Example" Modal -->
+  <div class="modal-backdrop" id="examplesModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>💡</span> <b>Try an Example Scenario</b>
+        </div>
+        <button class="modal-close" id="btnCloseModal">✕</button>
+      </div>
+      <p class="modal-desc">
+        Select one of the 5 curated questions from <code>examples.md</code> to see multi-hop reasoning, live path highlighting, and zero-hallucination contracts in action:
+      </p>
+
+      <div class="examples-grid" id="examplesGrid">
+        <!-- Loaded dynamically from /api/examples -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

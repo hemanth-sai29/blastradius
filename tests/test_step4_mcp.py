@@ -17,6 +17,7 @@ if sys.platform == "win32":
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from blastradius.graph.db import FalkorDBClient
 from blastradius.mcp_server.server import create_mcp_server
 
 
@@ -25,7 +26,8 @@ async def async_test_step4():
     print("TEST STEP 4: Official MCP Server Protocol & Tools")
     print("=" * 60)
 
-    server = create_mcp_server()
+    test_client = FalkorDBClient(graph_name="test_blastradius_step4")
+    server = create_mcp_server(client=test_client)
     tools = await server.list_tools()
     tool_names = [t.name for t in tools]
     print(f"[OK] MCP Server instantiated. Registered tools ({len(tool_names)}):")
@@ -102,6 +104,8 @@ async def async_test_step4():
     for r in rec_list:
         print(f"     - {r['author_name']} <{r['author_email']}> (score: {r['score']})")
 
+    test_client.clear()
+    print("[OK] Cleaned up test graph")
     print("\n>>> STEP 4 PASSED! Official MCP Server successfully tested and verified. <<<\n")
 
 

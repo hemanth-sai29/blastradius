@@ -16,15 +16,16 @@ from blastradius.ingester.builder import RepoIngester
 logger = logging.getLogger(__name__)
 
 
-def create_mcp_server() -> MCPServer:
+def create_mcp_server(client: FalkorDBClient | None = None) -> MCPServer:
     """Builds and registers all BlastRadius graph tools into an MCPServer instance."""
+    target_client = client or db_client
     server = MCPServer(
         name="blastradius",
         version="1.0.0",
         description="FalkorDB-powered graph tools for multi-hop code impact analysis and PR risk assessment",
     )
 
-    algorithms = GraphAlgorithms(client=db_client)
+    algorithms = GraphAlgorithms(client=target_client)
 
     @server.tool()
     def ingest_codebase(repo_path: str = ".", clear_existing: bool = True) -> dict[str, Any]:
@@ -32,7 +33,7 @@ def create_mcp_server() -> MCPServer:
         Ingests a Python repository's AST (files, classes, functions, calls, imports)
         and Git history (commits, authors, modifications) into FalkorDB.
         """
-        ingester = RepoIngester(repo_root=repo_path, client=db_client)
+        ingester = RepoIngester(repo_root=repo_path, client=target_client)
         stats = ingester.ingest(clear_existing=clear_existing)
         return {"status": "success", "repo_path": repo_path, "stats": stats}
 
@@ -134,7 +135,7 @@ def create_mcp_server() -> MCPServer:
         Executes a raw read-only Cypher query on FalkorDB and returns the formatted results.
         Useful for custom multi-hop graph explorations.
         """
-        res = db_client.query(cypher)
+        res = target_client.query(cypher)
         output = []
         if res and res.result_set:
             headers = [h[1] for h in getattr(res, "header", [])] or [
