@@ -1,7 +1,7 @@
 # 💥 BlastRadius: Autonomous Code Graph Agent
 
 > **Graph Hacks — Track 1: Agents That Act on Connected Data**  
-> An autonomous AI code review agent powered by **FalkorDB** and the official **Model Context Protocol (MCP)** that performs multi-hop code impact analysis, shortest-path call-chain tracing, architectural bottleneck detection, test discovery, and automated PR risk commentary with zero hallucinations.
+> An autonomous AI code review agent powered by **FalkorDB** and the official **Model Context Protocol (MCP)** that performs multi-hop code impact analysis, shortest-path call-chain tracing, architectural bottleneck detection, test discovery, and automated PR risk commentary grounded in verified Cypher graph traversals.
 
 [![Tests](https://img.shields.io/badge/pytest-55%20passed%20(100%25)-brightgreen.svg)](#-step-by-step-verification-tests)
 [![FalkorDB](https://img.shields.io/badge/graph_database-FalkorDB-red.svg)](https://falkordb.com/)
@@ -10,8 +10,8 @@
 
 ---
 
-> **🤖 AI Tool Disclosure (required by hackathon rules):**  
-> Parts of this project were built with the assistance of **Antigravity IDE** (Google DeepMind's AI coding assistant). All architecture decisions, Cypher queries, graph algorithms, test cases, and final code were written, verified, and understood by the human developer. Every number in this README has been validated against a live FalkorDB instance and a real `pytest` run.
+> **🤖 AI Tool Disclosure:**  
+> Parts of this project were built with the assistance of **Antigravity IDE** (Google DeepMind's AI coding assistant). All architecture decisions, Cypher queries, graph algorithms, test cases, and final code were reviewed and tested by the human developer. Every number in this README has been validated against a live FalkorDB instance and a real `pytest` run.
 
 ---
 
@@ -26,7 +26,7 @@
    - 👥 **Reviewer Recommendation**: Ranks subject-matter expert reviewers based on Git commit history, file ownership (`OWNS`), and churn.
 3. **Official MCP Server**: Implements the official Model Context Protocol using Python's `mcp` SDK to seamlessly serve graph intelligence to AI IDEs (Claude Desktop, Cursor, Antigravity, etc.).
 4. **Actionable PR Risk Commentary**: Automatically generates production-ready GitHub/GitLab PR comments with dynamic risk badges (`🚨 CRITICAL RISK`, `🔴 HIGH RISK`, `🟡 MEDIUM RISK`, `🟢 LOW RISK`), test gaps, affected critical hubs, and collapsible graph paths.
-5. **Zero Hallucinations & Full Explainability**: The agent refuses to guess. Every answer includes the exact ground-truth Cypher path traversed:
+5. **Grounded Reasoning & Full Explainability**: The agent refuses to guess when nodes are disconnected. Every answer includes the exact ground-truth Cypher path traversed:
    ```text
    [Function:blastradius/config.py:_detect_falkordb_host] --(CALLS)--> [Function:blastradius/config.py:_is_port_open]
    ```
@@ -111,7 +111,7 @@ docker run -d --name falkordb -p 6379:6379 falkordb/falkordb:latest
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/blastradius.git
+git clone https://github.com/hemanth-sai29/blastradius.git
 cd blastradius
 ```
 
@@ -127,7 +127,7 @@ python -m pytest tests/ -v
 ```
 Output:
 ```text
-============================= 55 passed in 7.78s =============================
+============================= 55 passed =============================
 ```
 
 ### 5. Run the Real-World Flask Showcase Demo
@@ -154,7 +154,7 @@ python demo.py
 ```
 
 ### Ingestion Summary
-- **83** Files | **137** Classes | **1,222** Functions | **804** Calls | **200** Imports | **301** Tests  *(verified from live FalkorDB run)*
+- **83** Files | **160** Classes | **1,462** Functions | **804** Calls | **200** Imports | **301** Tests *(verified from live FalkorDB run)*
 
 ### The 3 Impressive Questions
 
@@ -173,12 +173,12 @@ python demo.py
 #### 🧭 Question 2: Deep Call-Chain Shortest Path Across Architectural Boundaries
 > *"How does an application factory function in 'create_app' reach core error abort()?"*
 - **Measured query time**: ~5 ms
-- **Hops**: **3 hops** (Cypher `MATCH p = (src)-[:CALLS*1..8]->(dst) ORDER BY length(p) LIMIT 1`)
+- **Hops**: **4 hops** (Cypher `MATCH p = (src)-[:CALLS*1..8]->(dst) ORDER BY length(p) LIMIT 1`)
 - **Exact Path**:
   ```text
   [Function:create_app] --(CALLS)--> [Function:Config.from_mapping] --(CALLS)--> [Function:update] --(CALLS)--> [Function:get_post] --(CALLS)--> [Function:abort]
   ```
-- **Key Discovery**: `create_app` never mentions `abort` in its file. FalkorDB traces the cross-module call chain, giving developers mathematical proof of indirect coupling.
+- **Key Discovery**: `create_app` never mentions `abort` in its file. FalkorDB traces the cross-module call chain, giving developers deterministic graph evidence of indirect coupling through grounded Cypher paths.
 
 #### 🎯 Question 3: Centrality Bottlenecks & Automated PR Risk Commentary
 > *"Evaluate pull request impact for changes to 'src/flask/app.py' and generate PR review."*
@@ -283,7 +283,7 @@ To connect BlastRadius to an MCP client like **Claude Desktop**, **Cursor**, or 
 
 ## 📊 Sample Generated PR Review Comment
 
-```markdown
+````markdown
 ## 💥 BlastRadius PR Risk Assessment
 
 > **Autonomous multi-hop impact analysis powered by FalkorDB graph reasoning.**
@@ -315,20 +315,8 @@ The following high-centrality functions are directly or transitively in the blas
 [Function:blastradius/graph/db.py:FalkorDBClient.query] --(CALLS)--> [Function:blastradius/graph/db.py:FalkorDBClient.connect]
 ```
 </details>
-```
+````
 
----
-
-## 🏆 Graph Hacks Track 1 Alignment
-
-| Criteria | BlastRadius Implementation |
-| :--- | :--- |
-| **Multi-Hop Reasoning** | Follows multi-tier call and import graphs (`File -> Function -> Calls -> Function -> Test`). |
-| **Graph Algorithms as Tools** | Implements blast radius, shortest paths, degree centrality, and community clustering as native tools. |
-| **Official MCP Server** | Implemented using the official Python `mcp` SDK with full schema and type checking. |
-| **Zero Hallucination** | Refuses to guess disconnected paths; validates every response against ground-truth Cypher paths. |
-| **Full Explainability** | Returns the exact formatted Cypher traversal chain for every insight. |
-| **Actionable Outputs** | Automatically posts risk tiers, checks test coverage gaps, and recommends code reviewers for PRs. |
 ---
 
 ## 🏆 Graph Hacks Track Alignment
@@ -339,7 +327,7 @@ The following high-centrality functions are directly or transitively in the blas
 | **Multi-Hop Reasoning** | `MATCH p = (caller)-[:CALLS*1..N]->(target)` across File→Function→Test chains |
 | **Graph Algorithms as Tools** | Blast radius, shortest Cypher path, degree centrality, community clustering |
 | **Official MCP Server** | Implemented using the official Python `mcp` SDK with full schema & type checking |
-| **Zero Hallucination** | Refuses to answer if `found=False`; validates every response against ground-truth Cypher paths |
+| **Grounded Path Verification** | Refuses to answer if `found=False`; grounds every response in verified Cypher traversal paths |
 | **Full Explainability** | Returns the exact formatted Cypher traversal chain for every insight |
 | **Actionable Outputs** | Automatically posts risk tiers, highlights test gaps, and recommends reviewers for PRs |
 
