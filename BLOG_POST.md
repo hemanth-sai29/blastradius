@@ -99,3 +99,10 @@ If this project taught me one thing, it’s that the current AI hype cycle often
 Large language models are incredible at synthesizing language, translating intent, and formatting reports. But they are lousy databases. When you try to make an LLM remember the call topology of 2,000 functions, it will let you down. But when you pair an LLM with a high-performance graph database like FalkorDB, each tool does what it was born to do: FalkorDB computes the ground truth with mathematical precision, and the LLM translates that truth into actionable engineering advice.
 
 Code was always a graph. We just needed to stop treating it like text.
+
+---
+
+### 🔗 Project Links
+- **GitHub Repository**: [https://github.com/hemanth-sai29/blastradius](https://github.com/hemanth-sai29/blastradius)
+- **3-Minute Demo Video**: [Watch on YouTube](https://youtu.be/THem7fTU__U)
+- **Track**: Graph Hacks — Track 1: Agents That Act on Connected Data (with Track 2 Memory Graph bonus)

@@ -4,9 +4,12 @@
 > An autonomous AI code review agent powered by **FalkorDB** and the official **Model Context Protocol (MCP)** that performs multi-hop code impact analysis, shortest-path call-chain tracing, architectural bottleneck detection, test discovery, and automated PR risk commentary grounded in verified Cypher graph traversals.
 
 [![Tests](https://img.shields.io/badge/pytest-55%20passed%20(100%25)-brightgreen.svg)](#-step-by-step-verification-tests)
+[![Demo Video](https://img.shields.io/badge/Demo%20Video-YouTube-red?logo=youtube)](https://youtu.be/THem7fTU__U)
 [![FalkorDB](https://img.shields.io/badge/graph_database-FalkorDB-red.svg)](https://falkordb.com/)
 [![MCP](https://img.shields.io/badge/protocol-Model_Context_Protocol_(MCP)-blue.svg)](https://modelcontextprotocol.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> 📺 **[Watch the 3-Minute Live Demo Video on YouTube](https://youtu.be/THem7fTU__U)**
 
 ---
 
